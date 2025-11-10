@@ -319,3 +319,4 @@ if __name__ == '__main__':
     final_model = final(data_x, data_y, epochs=30, lr=0.001, batch_size=64, device=device)
 
     save_model(final_model, device, r'D:\Deep Learning\CAL-EEG database for Confusion Analysis in Learning\Code\model\EEGConfusionNet_final.onnx')
+
