@@ -91,5 +91,3 @@ if __name__ == '__main__':
 
     np.save(r'D:\Deep Learning Project\CAL-EEGConfusionNet\Data\2025CALx_train_processed.npy', processed_data)
     np.save(r'D:\Deep Learning Project\CAL-EEGConfusionNet\Data\channel_std.npy', channel_std)
-    print(f"已保存处理后的数据: 2025CALx_train_processed.npy")
-    print(f"已保存通道标准差: channel_std.npy")
