@@ -8,23 +8,6 @@ import torch.optim as optim
 import torch.onnx
 from torch.utils.data import TensorDataset, DataLoader
 
-def preprocess(data, channel_std=None):
-    # 基线校正
-    data = data - np.mean(data, axis=2, keepdims=True)
-
-    # 计算或使用通道标准差
-    if channel_std is None:
-        _, n_channels, _ = data.shape
-        data_reshaped = data.transpose(1, 0, 2).reshape(n_channels, -1)
-        channel_std = np.std(data_reshaped, axis=1)
-        channel_std = np.where(channel_std == 0, 1.0, channel_std)
-
-    # 标准化
-    data = data / channel_std.reshape(1, -1, 1)
-
-    return data, channel_std
-
-
 class GLU(nn.Module):
     def __init__(self, input_dim):
         super().__init__()
@@ -308,9 +291,8 @@ def save_model(model, device, save_path=r'D:\Deep Learning\CAL-EEG database for 
     print("模型已保存")
 
 if __name__ == '__main__':
-    data_x = np.load(r'D:\Deep Learning\CAL-EEG database for Confusion Analysis in Learning\Data\2025CALx_train.npy', allow_pickle=True)
-    data_y = np.load(r'D:\Deep Learning\CAL-EEG database for Confusion Analysis in Learning\Data\2025CALy_train.npy', allow_pickle=True)
-    data_x, channel_std = preprocess(data_x)
+    data_x = np.load(r'D:\Deep Learning Project\CAL-EEGConfusionNet\Data\2025CALx_train_processed.npy', allow_pickle=True)
+    data_y = np.load(r'D:\Deep Learning Project\CAL-EEGConfusionNet\Data\2025CALy_train.npy', allow_pickle=True)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -318,5 +300,4 @@ if __name__ == '__main__':
 
     final_model = final(data_x, data_y, epochs=30, lr=0.001, batch_size=64, device=device)
 
-    save_model(final_model, device, r'D:\Deep Learning\CAL-EEG database for Confusion Analysis in Learning\Code\model\EEGConfusionNet_final.onnx')
-
+    save_model(final_model, device, r'D:\Deep Learning Project\CAL-EEGConfusionNet\Code\model\EEGConfusionNet_final.onnx')
